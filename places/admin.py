@@ -4,20 +4,25 @@ from places.models import (
     Place, Category, Review, Media
 )
 
+
 class MediaInline(admin.TabularInline):
     model = Media
     extra = 0
+
 
 class ReviewInline(admin.TabularInline):
     model = Review
     extra = 0
 
+
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'category', 'has_wifi', 
-                    'review_count')
-    list_editable = ('category', 'has_wifi')
-    actions = ('set_wifi_true', )
+    list_filter = ('has_wifi', 'name',)
+    list_display = ('name', 'user', 'category', 'has_wifi',
+                    'review_count', 'is_active')
+    list_editable = ('category', 'has_wifi', 'is_active')
+    actions = ('set_wifi_true',)
     search_fields = ('name', 'user__username')
+    view_on_site = True
     inlines = [
         MediaInline,
         ReviewInline,
@@ -25,7 +30,9 @@ class PlaceAdmin(admin.ModelAdmin):
 
     def set_wifi_true(self, request, queryset):
         queryset.update(has_wifi=True)
+
     set_wifi_true.short_description = 'Mahmut'
+
 
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Category)
